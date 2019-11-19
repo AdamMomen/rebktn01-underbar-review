@@ -6,7 +6,10 @@
   // Returns whatever value is passed as the argument. This function doesn't
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
+ 
+  // takes a value and returs it.
   _.identity = function(val) {
+    return val;
   };
 
   /**
@@ -30,13 +33,26 @@
 
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
+
+
+  //===================Pseudo Code======================/
+  //1.It takes an array and a number
+  //2 It returns an if condition which evalualte an array
+  //3 it checks the array if the number is undefiend returs the first element,
+  //4 else it return the first number of elemments in the  array.
   _.first = function(array, n) {
     return n === undefined ? array[0] : array.slice(0, n);
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
+  //===================Pseudo Code======================/
+  //1.It takes an array and a number
+  //2 It returns an if condition which evalualte an array
+  //3 it checks the array if the number is undefiend returs the last element,
+  //4 else it return the last number of elemments in the  array.
   _.last = function(array, n) {
+    return n === undefined ? array[array.length - 1] : array.slice(0, n);
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -44,11 +60,24 @@
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
+  //========================================================
+  //This function iterates over an object or an array.
   _.each = function(collection, iterator) {
+    if(Array.isArray(collection)) {
+      for (var i = 0; i < collection.length; i++) {
+        iterator(collection[i],i,collection);
+      }
+    }
+    else {
+      for(var key in collection) {
+        iterator(collection[key],key, collection);
+      }
+    }
   };
-
+  //=========================================================
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
+  //This function returns the index of targer inside the array .
   _.indexOf = function(array, target) {
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
@@ -60,23 +89,60 @@
         result = index;
       }
     });
-
     return result;
   };
 
   // Return all elements of an array that pass a truth test.
+  //This function iterates over a collection and retuns the values that pass the test in a new array.
   _.filter = function(collection, test) {
+    var acc = [];
+    _.each(collection, function(item, index) {
+      if(test(item)) {
+        acc.push(item);
+      }
+     });
+    return acc;
   };
 
   // Return all elements of an array that don't pass a truth test.
+  //This function iterates over a collection using filter functuion and return the values that didnt pass the test in a new array.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function (item, index) {
+       return !(test(item));
+     })
   };
 
   // Produce a duplicate-free version of the array.
+  //===================Pseudo Code======================/
+  // 1. passing an array of numbers
+  // the stop the termination condition is when the iterator equles the last index of the array
+  // 2. check if the array is sorted
+  // 3. if not sorted sort the array
+  // 4. if the element of the sorted array equles to the next element
+  // 4. slice the element out of the array and reassaign it to the main array
+  // 5. recall the recursive function with modified parameters increesing the iterator by one
   _.uniq = function(array, isSorted, iterator) {
-  };
+  var iterator = iterator || 0;
+  var isSorted = isSorted || false;
+
+  if(iterator === array.length - 1) {
+    return array;
+  }
+  if (isSorted === false) {
+    array.sort();
+    if(array[iterator] === array[iterator + 1]) {
+      array = array.slice(array[iterator]);
+    }
+  } else {
+      if(array[iterator] === array[iterator + 1]) {
+        array = array.slice(array[iterator]);
+      }
+    }
+  }
+  return _.uniq(array, isSorted, iterator + 1);
+};
 
 
   // Return the results of applying an iterator to each element.
